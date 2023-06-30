@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Traits\QueryFilterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, QueryFilterable;
 
     /**
      * The attributes that are mass assignable.
@@ -40,5 +42,40 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+    ];
+
+    /**
+     * The fields that should be filterable by query.
+     *
+     * @var array
+     */
+    protected $filterable = [
+        'name', 'email'
+    ];
+
+    /**
+     * The fields that should be exact filterable by query.
+     *
+     * @var array
+     */
+    protected $exactFilterable = [
+        'name'
+    ];
+
+    /**
+     * The fields that should be sortable by query.
+     *
+     * @var array
+     */
+    protected $sortable = [
+        'name', 'email'
+    ];
+
+    /**
+     * The fields that should be includable by query.
+     *
+     * @var array
+     */
+    protected $includable = [
     ];
 }
