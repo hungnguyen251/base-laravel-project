@@ -46,8 +46,7 @@ trait QueryFilterable
             ->allowedFilters($filters)
             ->allowedSorts($this->sortable ?? [])
             ->allowedFields($this->visible ?? [])
-            ->allowedIncludes($this->includable ?? [])
-            ->allowedAppends($this->appendable ?? []);
+            ->allowedIncludes($this->includable ?? []);
 
         return $query;
     }
