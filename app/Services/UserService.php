@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -25,6 +26,10 @@ class UserService
 
     public function create(array $attrs)
     {
+        if (!empty($attrs['password'])) {
+            $attrs['password'] = Hash::make($attrs['password']);
+        }
+
         return $this->users->store($attrs);
     }
 
