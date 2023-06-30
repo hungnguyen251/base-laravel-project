@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\UserRepository;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -16,12 +17,16 @@ class UserService
 
     public function getAll($attrs)
     {
-        return $this->users->getAll($attrs);
+        $data = $this->users->getAll($attrs);
+
+        return response()->json($data, Response::HTTP_OK);
     }
 
     public function getById(int $id)
     {
-        return $this->users->getById($id);
+        $data = $this->users->getById($id);
+
+        return response()->json($data, Response::HTTP_OK);
     }
 
     public function create(array $attrs)
@@ -29,17 +34,25 @@ class UserService
         if (!empty($attrs['password'])) {
             $attrs['password'] = Hash::make($attrs['password']);
         }
+        $data = $this->users->store($attrs);
 
-        return $this->users->store($attrs);
+        return response()->json($data, Response::HTTP_CREATED);
     }
 
     public function update(int $id, array $attrs)
     {
-        return $this->users->updateById($id, $attrs);
+        if (!empty($attrs['password'])) {
+            $attrs['password'] = Hash::make($attrs['password']);
+        }
+        $data = $this->users->updateById($id, $attrs);
+
+        return response()->json($data, Response::HTTP_OK);
     }
 
     public function delete(int $id)
     {
-        return $this->users->deleteById($id);
+        $this->users->deleteById($id);
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }
