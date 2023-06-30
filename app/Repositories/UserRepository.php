@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Transformers\UserTransformer;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 
 class UserRepository implements BaseRepositoryInterface
 {
@@ -38,8 +39,8 @@ class UserRepository implements BaseRepositoryInterface
 
             return fractal($data, new UserTransformer())->toArray();
         } catch (Exception $e) {
-
-            echo $e->getMessage();
+            Log::error($e);
+            return $e->getMessage();
         }
     }
 
@@ -57,8 +58,8 @@ class UserRepository implements BaseRepositoryInterface
 
             return fractal($data, new UserTransformer())->toArray();
         } catch (Exception $e) {
-
-            echo $e->getMessage();
+            Log::error($e);
+            return $e->getMessage();
         }
     }
 
