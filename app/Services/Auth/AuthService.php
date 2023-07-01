@@ -3,9 +3,7 @@
 namespace App\Services\Auth;
 
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
@@ -28,7 +26,6 @@ class AuthService
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
     protected $maxAttempts = 5;
     protected $decayMinutes = 5;
 
@@ -49,7 +46,9 @@ class AuthService
      * @return \Illuminate\Http\JsonResponse
      */
     public function login($request){
-        if (! $token = auth()->attempt($request->all())) {
+        $credentials = $request->only('email','password');
+
+        if (! $token = JWTAuth::attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 
@@ -81,8 +80,7 @@ class AuthService
      * @return \Illuminate\Http\JsonResponse
      */
     public function me() {
-        dd(1);
-        return response()->json(auth()->user());
+        return response()->json(auth()->user(), Response::HTTP_OK);
     }
     /**
      * Get the token array structure.
