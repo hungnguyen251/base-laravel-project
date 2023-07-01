@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,4 +26,11 @@ Route::prefix('users')->group(function () {
     Route::post('/store', [UserController::class, 'store'])->name('api.users.store');
     Route::put('/update/{id}', [UserController::class, 'update'])->name('api.users.update');
     Route::delete('/destroy/{id}', [UserController::class, 'destroy'])->name('api.users.destroy');
+});
+
+Route::group(['middleware' => 'api','prefix' => 'auth'], function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/refresh', [AuthController::class, 'refreshToken']);
+    Route::get('/me', [AuthController::class, 'me']);    
 });
