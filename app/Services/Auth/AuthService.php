@@ -2,6 +2,8 @@
 
 namespace App\Services\Auth;
 
+use App\Exceptions\AccessDeniedException;
+use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -19,26 +21,7 @@ class AuthService
     |
     */
 
-    use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $maxAttempts = 5;
-    protected $decayMinutes = 5;
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->maxAttempts = config('constants.auth_max_attempts');
-        $this->decayMinutes = config('constants.auth_decay_minutes');
-    }
+    // use AuthenticatesUsers;
 
     /**
      * Get a JWT via given credentials.
@@ -46,6 +29,12 @@ class AuthService
      * @return \Illuminate\Http\JsonResponse
      */
     public function login($request){
+        //Check email exists
+        $user = $this->checkUserExist($request->email);
+        if (!$user) {
+            throw new AccessDeniedException();
+        }
+
         $credentials = $request->only('email','password');
 
         if (! $token = JWTAuth::attempt($credentials)) {
@@ -96,5 +85,21 @@ class AuthService
             'expires_in' => auth()->factory()->getTTL() * 60,
             'user' => auth()->user()
         ], Response::HTTP_OK);
+    }
+
+    /**
+     * Check user exist.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function checkUserExist($email)
+    {
+        $user = User::where('email', '=', $email)->first();
+        if ($user) {
+            return $user;
+        }
+
+        return false;
     }
 }
