@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,5 +33,7 @@ Route::group(['middleware' => 'api','prefix' => 'auth'], function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refreshToken']);
-    Route::get('/me', [AuthController::class, 'me']);    
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::get('{provider}', [SocialAuthController::class, 'socialLogin'])->name('social.login');
+    Route::get('{provider}/callback', [SocialAuthController::class, 'socialCallback'])->name('social.callback');
 });
