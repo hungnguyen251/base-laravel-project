@@ -4,7 +4,6 @@ namespace App\Services\Auth;
 
 use App\Exceptions\AccessDeniedException;
 use App\Models\User;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -20,8 +19,6 @@ class AuthService
     | to conveniently provide its functionality to your applications.
     |
     */
-
-    // use AuthenticatesUsers;
 
     /**
      * Get a JWT via given credentials.
